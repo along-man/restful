@@ -6,6 +6,11 @@ class Success(APIException):
     msg = 'ok'
     error_code = 0
 
+class DeleteSuccess(Success):
+    code = 202
+    msg = 'delete success'
+    error_code = 1
+
 # 服务器内部错误
 class SeverError(APIException):
     code = 500

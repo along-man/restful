@@ -2,7 +2,7 @@
     created by along on 2025.03.18
 """
 from werkzeug.exceptions import HTTPException
-from app.app import create_app
+from app import create_app
 from app.libs.error import APIException
 from app.libs.error_code import SeverError
 
@@ -28,4 +28,4 @@ def framework_errors(e):
             raise e
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)

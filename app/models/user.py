@@ -11,6 +11,9 @@ class User(Base):
     auth = Column(SmallInteger, default=1)
     _password = Column('password', String(100))
 
+    def keys(self):
+        return ['id', 'email', 'nickname',  'auth']
+
     @property
     def password(self):
         return self._password
@@ -33,12 +36,11 @@ class User(Base):
     @staticmethod
     def verify(email, password):
         """验证用户邮箱登录的账号密码"""
-        user = User.query.filter_by(email=email).first()
-        if not user:
-            raise NotFound(msg='user not found')
+        user = User.query.filter_by(email=email).first_or_404()
         if not user.check_password(password):
             raise AuthFailed()
-        return {'uid': user.id}
+        is_admin = True if user.auth == 2 else False
+        return {'uid': user.id, 'scope': is_admin}
     def check_password(self, raw):
         if not self._password:
             return False

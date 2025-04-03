@@ -70,4 +70,5 @@ def verify_auth_token(token):
 
     uid = data['uid']  # 从解析结果中提取用户ID
     ac_type = data['type']  # 从解析结果中提取认证类型
-    return User(uid, ac_type, "")  # 返回包含用户信息的User对象
+    scope = data['scope']
+    return User(uid, ac_type, scope)  # 返回包含用户信息的User对象
