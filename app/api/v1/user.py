@@ -25,9 +25,6 @@ def super_get_user(uid):
     返回值:
     - 用户信息的JSON格式数据
     """
-    is_admin = g.user.scope
-    if not is_admin:
-        raise AuthFailed()
     user = User.query.filter_by(id=uid).first_or_404()
     return jsonify(user)
 

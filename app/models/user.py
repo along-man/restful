@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, SmallInteger, String
 from werkzeug.security import generate_password_hash, check_password_hash
 from .base import Base, db
-from ..libs.error_code import NotFound, AuthFailed
+from ..libs.error_code import AuthFailed
 
 
 class User(Base):
@@ -39,8 +39,8 @@ class User(Base):
         user = User.query.filter_by(email=email).first_or_404()
         if not user.check_password(password):
             raise AuthFailed()
-        is_admin = True if user.auth == 2 else False
-        return {'uid': user.id, 'scope': is_admin}
+        scope = 'SuperScope' if user.auth == 2 else 'UserScope'
+        return {'uid': user.id, 'scope': scope}
     def check_password(self, raw):
         if not self._password:
             return False
