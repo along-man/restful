@@ -13,11 +13,12 @@
     - itsdangerous：用于生成和验证签名令牌
 """
 
-from flask import current_app, g  
+from flask import current_app, g, request
 from flask_httpauth import HTTPBasicAuth  
 from itsdangerous import TimedJSONWebSignatureSerializer as\
     Serializer, BadSignature, SignatureExpired
-from app.libs.error_code import AuthFailed  
+from app.libs.error_code import AuthFailed, Forbidden
+from app.libs.scope import is_in_scope
 from collections import namedtuple  # 用于创建简单的不可变对象
 
 # 创建HTTP基本认证实例
@@ -71,4 +72,8 @@ def verify_auth_token(token):
     uid = data['uid']  # 从解析结果中提取用户ID
     ac_type = data['type']  # 从解析结果中提取认证类型
     scope = data['scope']
+
+    allow = is_in_scope(scope, request.endpoint)  # 检查权限
+    if not allow:
+        raise Forbidden()
     return User(uid, ac_type, scope)  # 返回包含用户信息的User对象
